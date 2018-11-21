@@ -1,7 +1,5 @@
 package elm327
 
-import "fmt"
-
 type Elm327 struct {
 	socket Socket
 }
@@ -72,24 +70,30 @@ func (e *Elm327) send(buffer []byte) (int, error) {
 
 func (e *Elm327) read() ([]byte, error) {
 	buf := make([]byte, 1024)
+	done := false
 
-	for {
+	for !done {
 		r, err := e.socket.Read()
 		if err != nil {
 			return nil, err
 		}
 
 		// stop on terminal >
+		endIndex := -1
 		for i, n := range r {
-			if 0x3C == n {
-				buf = append(buf, r[:i]...)
+			if ">" == string(n) {
+				endIndex = i
+				done = true
 				break
 			}
+		}
 
+		if done {
+			buf = append(buf, r[:endIndex]...)
+		} else {
 			buf = append(buf, r...)
 		}
 	}
 
-	fmt.Println(string(buf))
 	return buf, nil
 }
