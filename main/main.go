@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	"github.com/Diastro/go-rfccomm-odb/internal/rfcomm"
-	"github.com/Diastro/go-rfccomm-odb/pkg/elm327"
+	"github.com/Diastro/go-rfccomm-obd/internal/rfcomm"
+	"github.com/Diastro/go-rfccomm-obd/pkg/elm327"
 )
 
 func main() {
