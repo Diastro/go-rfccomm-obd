@@ -25,7 +25,7 @@ func (e *Elm327) Send(buffer []byte) ([]byte, error) {
 }
 
 func (e *Elm327) initialize() error {
-	_, err := e.send([]byte("ATZ"))
+	_, err := e.send([]byte("ATD\r"))
 	if err != nil {
 		return err
 	}
@@ -34,7 +34,16 @@ func (e *Elm327) initialize() error {
 		return err
 	}
 
-	_, err = e.send([]byte("ATE0"))
+	_, err = e.send([]byte("ATZ\r"))
+	if err != nil {
+		return err
+	}
+	_, err = e.read()
+	if err != nil {
+		return err
+	}
+
+	_, err = e.send([]byte("ATS0\r"))
 	if err != nil {
 		return err
 	}
@@ -43,7 +52,7 @@ func (e *Elm327) initialize() error {
 		return err
 	}
 
-	_, err = e.send([]byte("ATH1"))
+	_, err = e.send([]byte("ATE0\r"))
 	if err != nil {
 		return err
 	}
@@ -52,7 +61,25 @@ func (e *Elm327) initialize() error {
 		return err
 	}
 
-	_, err = e.send([]byte("ATL0"))
+	_, err = e.send([]byte("ATH0\r"))
+	if err != nil {
+		return err
+	}
+	_, err = e.read() // should be ok
+	if err != nil {
+		return err
+	}
+
+	_, err = e.send([]byte("ATSP0\r"))
+	if err != nil {
+		return err
+	}
+	_, err = e.read() // should be ok
+	if err != nil {
+		return err
+	}
+
+	_, err = e.send([]byte("ATL0\r"))
 	if err != nil {
 		return err
 	}
@@ -69,7 +96,7 @@ func (e *Elm327) send(buffer []byte) (int, error) {
 }
 
 func (e *Elm327) read() ([]byte, error) {
-	buf := make([]byte, 1024)
+	buf := make([]byte, 0)
 	done := false
 
 	for !done {

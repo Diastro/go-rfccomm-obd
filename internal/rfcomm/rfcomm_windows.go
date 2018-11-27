@@ -4,7 +4,7 @@ type RfcommSocket struct {
 	fd int
 }
 
-func NewScoket(addr [6]uint8, port uint8) RfcommSocket {
+func NewSocket(addr [6]uint8, port uint8) RfcommSocket {
 
 	return RfcommSocket{fd: 0}
 }

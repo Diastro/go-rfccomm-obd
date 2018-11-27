@@ -9,7 +9,7 @@ type Socket struct {
 	fd int
 }
 
-func NewScoket(addr [6]uint8, port uint8) Socket {
+func NewSocket(addr [6]uint8, port uint8) Socket {
 	fd, err := unix.Socket(syscall.AF_BLUETOOTH, syscall.SOCK_STREAM, unix.BTPROTO_RFCOMM)
 	if err != nil {
 		panic(err.Error())
@@ -17,8 +17,8 @@ func NewScoket(addr [6]uint8, port uint8) Socket {
 
 	//https://github.com/golang/sys/blob/master/unix/syscall_linux.go
 	socket := &unix.SockaddrRFCOMM{
-		//Addr:  [6]uint8{0x72,0xA2,0x9F,0x3E,0x04,0x00},
-		//Addr:  [6]uint8{0xF1,0xBE,0x6D,0x70,0xF3,0x5C},
+		//Addr:  [6]uint8{0x72,0xA2,0x9F,0x3E,0x04,0x00}
+		//Addr:  [6]uint8{0xF1,0xBE,0x6D,0x70,0xF3,0x5C}
 		Addr:    addr,
 		Channel: uint8(port),
 	}

@@ -4,16 +4,20 @@ import (
 	"fmt"
 	"github.com/Diastro/go-rfccomm-obd/internal/rfcomm"
 	"github.com/Diastro/go-rfccomm-obd/pkg/elm327"
+	"github.com/Diastro/go-rfccomm-obd/pkg/obd"
 )
 
 func main() {
-	//https://github.com/brendan-w/python-OBD/tree/master/obd
-	sock := rfcomm.NewScoket([6]uint8{0xF1, 0xBE, 0x6D, 0x70, 0xF3, 0x5C}, 0)
+	sock := rfcomm.NewSocket([6]uint8{0xF1, 0xBE, 0x6D, 0x70, 0xF3, 0x5C}, 2)
+	//sock := rfcomm.NewSocket([6]uint8{0x72,0xA2,0x9F,0x3E,0x04,0x00}, 1)
 	elm := elm327.NewElm327(&sock)
-	resp, err := elm.Send([]byte("010C"))
+
+
+	odb := obd.NewObdProvider(elm)
+	resp, err := odb.GetRpm()
 	if err != nil {
 		panic(err.Error())
 	}
 
-	fmt.Print(resp)
+	fmt.Printf("RPM : %v\n", resp)
 }
